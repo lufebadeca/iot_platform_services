@@ -1,19 +1,104 @@
 version: "3.8"
-services:
 
+volumes:
+  vol-emqx-data:
+    name: foo-emqx-data
+  vol-emqx-etc:
+    name: foo-emqx-etc
+  vol-emqx-log:
+    name: foo-emqx-log
+  #this sections is to declare the folders which initial contents we want to keep for data persistence
+  #the first time, if not volumes created, creates these volumes with the instructions given below.
+  #Next time, it uses these and override. Volumes created at emqx and renamed as first parameter here
+
+services:
   emqx:
     container_name: emqx
     image: emqx/emqx:4.2.3
     restart: always
     ports:
-      - ${emqxdashport}:18083
+      - 18083:18083
       - 8083:8083
+    #volumes (example):
+      #- ./newLocalFolder:/opt/emqx/etc
+      #left side for local data : right side for container data to be linked to, for overriding
+      # ./vol-emqx-data creates a folder in my local host where data will be stored for data persistence
+      #that way, each time the container is turned down and up, we won't lose data, e.g. broker rules
+    #NOTICE this is the default volume setting. It won't work since newLocalFolder will be empty
+    # and nothing will be copied onto opt/emqx/etc. Use env variables to set the initial values for
+    # the config parameters. Passwords can be placed in a .env file not shared in github
+    #IMPORTANT: volumes management require EMQX_NAME and EMQX_HOST environment variables
+    
+    volumes:
+      - vol-emqx-data:/opt/emqx/data
+      - vol-emqx-etc:/opt/emqx/etc
+      - vol-emqx-log:/opt/emqx/log
+
+
+
+  #mongo:
+  #  container_name: mongo
+  #  image: mongo:7.0.4
+  #  restart: always
+  #  environment:
+  #    TZ: "America/Panama/Panama"
+  #    MONGO_INITDB_ROOT_USERNAME: "Luifer"
+  #    MONGO_INITDB_ROOT_PASSWORD: 1234
+  #  ports:
+  #    - 27017:27017
+  #    #Ports: STD port for Mongo             
+  #  volumes:
+  #    - ./mongodata:/data/db          
+  #    #data persistence. Saves the DB into this folder
+
+
+#
+#    links:
+#      - mongo
+#
     environment: 
-      #listener.tcp.external.max_connections
-      EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: 1000
+      #The 2 environment variables below are mandatory for this to work. Found at opt/emqx/etc/emqx.conf
+      EMQX_NAME: foo_emqx
+      EMQX_HOST: 127.0.0.1
+#      TZ: "America/Panama/Panama"
+#      #disable websocker connections with no username
+#      #EMQX_ALLOW_ANONYMOUS: "false"
+#      ##listener.tcp.external.max_connections
+#      #EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: ${TCPEXTMAX}
+#      #EMQX_LISTENER__TCP__INTERNAL__MAX_CONNECTIONS: ${TCPINTMAX}
+#      ##listener.ssl.external.max_connections
+#      #EMQX_LISTENER__SSL__EXTERNAL__MAX_CONNECTIONS: ${SSLMAX}
+#      #EMQX_LISTENER__WS__EXTERNAL__MAX_CONNECTIONS: ${WSMAX}
+#      #EMQX_LISTENER__WSS__EXTERNAL__MAX_CONNECTIONS: ${WSSMAX}
+#      #environment variables to be linked to in the container from the .env file next to this one (can be created with simple text)
+#      #you can find the variable names in hub.docker.com/containerName, see above for EMQX particular nomenclature rules
+#        #now, USER AND PASSWORD WIT DATA PERSISTENCE: Other .conf file found at opt/emqx/etc/plugins/emqx_dashboard.conf
+#      #EMQX_DASHBOARD__DEFAULT_USER__LOGIN: '${emqxUser}' #dashboard.default_user.login = admin
+#      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: '${emqxPassword}'  #dashboard.default_user.password = public      #LINK/CONNECTION TO MONGO  (file at opt/emqx/etc/pluggins/emqx_auth_mongo.conf)
+#      EMQX_AUTH__MONGO__TYPE: single
+#      EMQX_AUTH__MONGO__TOPOLOGY__POOL_SIZE: 1
+#      EMQX_AUTH__MONGO__TOPOLOGY__MAX__OVERFLOW: 0
+#
+#      EMQX_AUTH__MONGO__SERVER: "mongo:27017"
+#      WMQX_AUTH__MONGO__POOL: 8
+#      EMQX_AUTH__MONGO__LOGIN: "devuser"
+#      EMQX_AUTH__MONGO__PASSWORD: "devpassword"
+#      EMQX_AUTH__MONGO__AUTH_SOURCE: "admin"
+#
+#      EMQX_AUTH__MONGO__DATABASE: "ioticosgodlevel"
+#      EMQX_AUTH__MONGO__AUTH_QUERY__COLLECTION: "emqxauthrules"
+#
+#      EMQX_AUTH__MONGO__SUPER_QUERY__COLLECTION: "emqxauthrules"
+#      EMQX_AUTH__MONGO__SUPER_QUERY__SUPER_FIELD: "is_superuser"
+#      EMQX_AUTH__MONGO__SUPER_QUERY__SELECTOR: "username=%u"  #%u is how EMQX stores user names
+#      EMQX_AUTH__MONGO__SUPER_QUERY: "off"    #turns off super users after setting it
+#
+#      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_HASH: plain  #plain for no encription of passwords stored in db
+#      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_FIELD: "password"  #password is the field name in db for storing passwords
+#      EMQX_AUTH__MONGO__AUTH_QUERY__SELECTOR: "username=%u"
+#     
+    
 
-
-      
 
 
 
