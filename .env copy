@@ -1,0 +1,13 @@
+#Production variables example (use one file for local, another for production, etc)
+emqxdashport=18083
+TCPEXTMAX=50
+TCPINTMAX=50
+SSLMAX=20
+WSMAX=10
+WSSMAX=10
+emqxUser=''
+emqxPassword='' 
+
+MONGO_EXT_PORT=27017
+MONGO_USERNAME=""
+MONGO_PASSWORD=""
