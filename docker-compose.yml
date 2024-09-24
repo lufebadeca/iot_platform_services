@@ -92,7 +92,7 @@ services:
 
       #name of Mongo database, create a DB with same name in mongo
       EMQX_AUTH__MONGO__DATABASE: "ioticosgodlevel"
-      EMQX_AUTH__MONGO__AUTH_QUERY__COLLECTION: "emqxauthrules" #collecton with credentials for emq
+      EMQX_AUTH__MONGO__AUTH_QUERY__COLLECTION: "emqxauthrules" #collecton with credentials for emqx client authentication
 
       #won't be used but settings are given
       EMQX_AUTH__MONGO__SUPER_QUERY__COLLECTION: "emqxauthrules"
