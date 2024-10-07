@@ -1,0 +1,31 @@
+[
+	{
+		"username":"user1",
+		"password":"user1",
+		"is_superuser": false,
+		"publish": ["plant1"],
+		"subscribe":["plant1"]
+	},
+	{
+		"username":"user2",
+		"password":"user2",
+		"is_superuser": false,
+		"publish": ["plant2"],
+		"subscribe":["plant2"]
+	},
+	{
+		"username":"user3",
+		"password":"user3",
+		"is_superuser": false,
+		"publish": ["plant3"],
+		"subscribe":["plant3"]
+	},
+	{
+		"username":"admin",
+		"password":"admin",
+		"is_superuser": false,
+		"publish": ["#"],
+		"subscribe":["#"]
+	}
+
+]
