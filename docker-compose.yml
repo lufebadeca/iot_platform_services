@@ -1,3 +1,4 @@
+#Using Node version 14.21.3
 volumes:
   vol-emqx-data:
     name: foo-emqx-data
@@ -113,30 +114,3 @@ services:
       EMQX_AUTH__MONGO__ACL_QUERY__SELECTOR: "username=%u"  #match for username in the collection
       EMQX_LOADED_PLUGINS: "emqx_recon,emqx_retainer,emqx_managment,emqx_auth_mongo,emqx_dashboard"
       #recon for auto reconn, retainer for retained messages, management for EMQX  API, and mongo auth
-
-
-
-
-
-
-       
-
-
-      
-
-   
-    
-
-
-
-   
-
-
-
-
-
-
-    
-
-
-
