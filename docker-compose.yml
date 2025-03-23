@@ -32,14 +32,17 @@ services:
 
   emqx:
     container_name: emqx
-    image: emqx/emqx:4.4.18
+    image: emqx/emqx:4.4.18 #4.4.18
     #restart: always
     ports:
       - '18083:18083'      ##puerto por donde entro al dashboard emqx   ssl 18083:18083 http
       - '1883:1883'
       - '8883:8883'                                                   # tcp  1883:1883 tcp
       - '8083:8083'                                                   # tcp ssl 8883:1883 tcp
-      - '8085:8081'
+      - 18084:18084
+      - 8084:8084
+      - 8085:8081 #API management port
+
     #VOLUMES EXAMPLE: - ./newLocalFolder:/opt/emqx/etc
     #left side for local data : right side for container data to be linked to, for overriding
     #first time newLocalFolder will be empty and nothing will be copied onto opt/emqx/etc.
@@ -54,12 +57,15 @@ services:
       - mongo #connects EMQX to mongo network
     depends_on:
       - mongo
+    
+    extra_hosts:
+      - "localhost:192.168.1.14"  #localhost will point at my dev machine IP address: IT CHANGES!!
 
     environment: 
       #The 2 environment variables below are mandatory for this to work. Found at opt/emqx/etc/emqx.conf
       #environment variables to be linked to in the container from the .env file next to this one
       #you can find the variable names in hub.docker.com/containerName, see above for EMQX particular nomenclature rules
-      EMQX_NAME: EMQX_PLANT
+      EMQX_NAME: IOT_GATOR
       EMQX_HOST: 127.0.0.1
       TZ: "America/Panama/Panama"
 
@@ -77,8 +83,11 @@ services:
       EMQX_NOMATCH: "deny"
 
       #here, USER AND PASSWORD WITH DATA PERSISTENCE: Other .conf file found at opt/emqx/etc/plugins/emqx_dashboard.conf
-      EMQX_DASHBOARD__DEFAULT_USER__LOGIN: '${emqxUser}' #dashboard.default_user.login = admin
+      #EMQX_DASHBOARD__DEFAULT_USER__LOGIN: '${emqxUser}' #dashboard.default_user.login = admin
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: '${emqxPassword}'  #dashboard.default_user.password = public      #LINK/CONNECTION TO MONGO  (file at opt/emqx/etc/pluggins/emqx_auth_mongo.conf)
+      #dashboard application credentials
+      EMQX_MANAGEMENT__DEFAULT_APPLICATION__SECRET: "${emqxPassword}"
+
       EMQX_AUTH__MONGO__TOPOLOGY__POOL_SIZE: 1
       EMQX_AUTH__MONGO__TOPOLOGY__MAX__OVERFLOW: 0
 
@@ -92,7 +101,7 @@ services:
       #admin is the mongo default database for authentication 
 
       #name of Mongo database, create a DB with same name in mongo
-      EMQX_AUTH__MONGO__DATABASE: "ioticosgodlevel"
+      EMQX_AUTH__MONGO__DATABASE: "iotgator"
       EMQX_AUTH__MONGO__AUTH_QUERY__COLLECTION: "emqxauthrules" #collecton with credentials for emqx client authentication
 
       #won't be used but settings are given
