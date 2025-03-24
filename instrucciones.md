@@ -14,9 +14,10 @@
 - target del comando: nodemon api/index.js
 (si esto no funciona es porque debe instalarse nodemon, el cual no se instala con las demas dependencias con npm install porque se hizo de forma global: npm install -g nodemon)
 
-### levantar webhooks:
-- como inicialmente se levantan en localhost, la dirección IP en el equipo cambia cada vez
-- asegurarse de que la IP actual es la misma que en el docker-compose.ym 
+### levantar webhooks (end-points):
+- los webhooks creados pueden iniciar desconectados sin poderse conectar ni siquiera manualmente
+- esto sucede porque como los endpoints se levantan en localhost, la dirección IP en el equipo cambia cada vez
+- asegurarse de que la IP actual es la misma que en el docker-compose.ym, en "extra_hosts:"
 
 ## front-end del proyecto:
 - desde carpeta APP,
