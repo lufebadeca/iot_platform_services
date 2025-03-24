@@ -59,7 +59,7 @@ services:
       - mongo
     
     extra_hosts:
-      - "localhost:192.168.1.14"  #localhost will point at my dev machine IP address: IT CHANGES!!
+      - ${LOCALHOST_IP_ADDRESS}  #localhost will point at my dev machine IP address: IT CHANGES!!
 
     environment: 
       #The 2 environment variables below are mandatory for this to work. Found at opt/emqx/etc/emqx.conf
@@ -83,7 +83,7 @@ services:
       EMQX_NOMATCH: "deny"
 
       #here, USER AND PASSWORD WITH DATA PERSISTENCE: Other .conf file found at opt/emqx/etc/plugins/emqx_dashboard.conf
-      #EMQX_DASHBOARD__DEFAULT_USER__LOGIN: '${emqxUser}' #dashboard.default_user.login = admin
+      EMQX_DASHBOARD__DEFAULT_USER__LOGIN: '${emqxUser}' #dashboard.default_user.login = admin
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: '${emqxPassword}'  #dashboard.default_user.password = public      #LINK/CONNECTION TO MONGO  (file at opt/emqx/etc/pluggins/emqx_auth_mongo.conf)
       #dashboard application credentials
       EMQX_MANAGEMENT__DEFAULT_APPLICATION__SECRET: "${emqxPassword}"
